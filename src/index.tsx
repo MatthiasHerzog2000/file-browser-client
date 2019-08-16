@@ -7,10 +7,13 @@ import { BrowserRouter } from "react-router-dom";
 import { MuiThemeProvider, createMuiTheme } from "@material-ui/core/styles";
 import "react-pdf/dist/Page/AnnotationLayer.css";
 import Axios from "axios";
+import { lightBlue } from "@material-ui/core/colors";
 
 const theme = createMuiTheme({
-  typography: {
-    useNextVariants: true
+  palette: {
+    primary: {
+      main: "#039BE5"
+    }
   }
 });
 Axios.interceptors.request.use(

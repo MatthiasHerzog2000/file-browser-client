@@ -211,12 +211,12 @@ class FooterComponent extends Component<
     return (
       <footer className={classes.footer}>
         <div className={classes.floatright}>
-          <Grid container spacing={32} justify="space-evenly">
+          <Grid container spacing={4} justify="space-evenly">
             <Grid item>{this.getFileIcon()}</Grid>
           </Grid>
         </div>
         <div className={classes.floatleft}>
-          <Grid container spacing={32} justify="space-between">
+          <Grid container spacing={4} justify="space-between">
             <Grid xs={7} item>
               <Typography variant="h6" align="center">
                 {this.props.selectedFile.name}

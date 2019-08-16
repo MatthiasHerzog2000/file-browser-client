@@ -8,7 +8,7 @@ import {
 } from "@material-ui/core";
 import { ISnackbarComponentState } from "./ISnackbarComponentState";
 import CloseIcon from "@material-ui/icons/Close";
-import classNames from "classnames";
+import clsx from "clsx";
 import { ISnackbarComponentProps, styles } from "./ISnackbarComponentProps";
 import CheckCircleIcon from "@material-ui/icons/CheckCircle";
 import ErrorIcon from "@material-ui/icons/Error";
@@ -43,13 +43,11 @@ class SnackbarComponent extends Component<
           onClose={handleClose}
         >
           <SnackbarContent
-            className={classNames(classes[type], type)}
+            className={clsx(classes[type], type)}
             aria-describedby="client-snackbar"
             message={
               <span id="client-snackbar" className={classes.message}>
-                <Icon
-                  className={classNames(classes.icon, classes.iconVariant)}
-                />
+                <Icon className={clsx(classes.icon, classes.iconVariant)} />
                 {message}
               </span>
             }

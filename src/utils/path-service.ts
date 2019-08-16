@@ -17,7 +17,6 @@ export class PathService {
         { headers: { "Content-type": "application/json" } }
       )
         .then(data => {
-          console.log(data);
           res(data.data);
         })
         .catch(err => res(err.response.data));
@@ -46,7 +45,6 @@ export class PathService {
         { headers: { "Content-type": "application/json" } }
       )
         .then(data => {
-          console.log(data);
           resolve(data.data);
         })
         .catch(err => resolve(err.response.data));
@@ -56,7 +54,6 @@ export class PathService {
     return new Promise((resolve, reject) => {
       Axios.get(SERVER_URL + "getInitialPath")
         .then(data => {
-          console.log(data);
           resolve(data.data);
         })
         .catch(err => resolve(err.response.data));
@@ -80,7 +77,7 @@ export class PathService {
         }
       )
         .then(response => {
-          console.log(response);
+
           const url = window.URL.createObjectURL(new Blob([response.data]));
           const link = document.createElement("a");
           link.href = url;

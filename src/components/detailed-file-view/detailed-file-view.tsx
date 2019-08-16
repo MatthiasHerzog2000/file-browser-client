@@ -40,11 +40,6 @@ class DetailedFileView extends Component<
   goToNextPage = () =>
     this.setState(state => ({ pageNumber: state.pageNumber + 1 }));
   async componentWillMount() {
-    console.log(
-      !this.props.file.extension!.match(
-        new RegExp("(.jpg|.jpeg|.png|.gif|.mp4|.avi|.mpg|.wmv)")
-      )
-    );
     if (
       !this.props.file.extension!.match(
         new RegExp("(.jpg|.jpeg|.png|.gif|.mp4|.avi|.mpg|.wmv)")
@@ -55,7 +50,6 @@ class DetailedFileView extends Component<
         this.props.file.name
       );
       if (response.success) {
-        console.log(response);
         const base = await PathService.getPDF(response.outpath);
         this.setState({
           base64: "data:application/pdf;base64," + base,
@@ -76,7 +70,6 @@ class DetailedFileView extends Component<
         options
       );
       if (response.success) {
-        console.log(response);
         const base = await PathService.getPreview(response.outpath);
         this.setState({ base64: "data:;base64," + base });
       } else {
@@ -93,7 +86,7 @@ class DetailedFileView extends Component<
         onClose={handleClose}
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
-        maxWidth="lg"
+        maxWidth="xl"
         scroll="body"
         PaperProps={{
           classes: {

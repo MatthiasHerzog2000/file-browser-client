@@ -16,6 +16,7 @@ import ArrowBackIcon from "@material-ui/icons/ArrowBack";
 import { AuthService } from "../../utils/auth-service";
 import { User } from "../../models/user";
 import CloudUploadIcon from "@material-ui/icons/CloudUpload";
+import CreateNewFolderIcon from "@material-ui/icons/CreateNewFolder";
 import NewFolderDialog from "../new-folder-dialog/newFolderDialog";
 import { PathService } from "../../utils/path-service";
 import { withRouter } from "react-router";
@@ -83,10 +84,11 @@ class NavbarComponent extends Component<
                 onClick={() => this.setState({ openFolderDialog: true })}
               >
                 Neuer Ordner
+                <CreateNewFolderIcon className={classes.space} />
               </Button>
               <Button color="inherit">
                 Upload
-                <CloudUploadIcon />
+                <CloudUploadIcon className={classes.space} />
               </Button>
               <Button
                 color="inherit"

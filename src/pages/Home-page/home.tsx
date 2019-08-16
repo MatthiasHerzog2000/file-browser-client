@@ -10,6 +10,7 @@ import {
   Typography
 } from "@material-ui/core";
 import FileComponent from "../../components/file-component/file-component";
+import SecondNavigation from "../../components/second-navigation/second-navigation";
 import SnackbarComponent from "../../components/snackBar-component/snackbarComponent";
 import { IFile } from "../../models/file";
 import { styles, IHomeProps } from "./IHomeProps";
@@ -45,9 +46,7 @@ class Home extends Component<IHomeProps, IHomeState> {
         "",
         this.state.showFile.path
       );
-    console.log(this.state.files);
     window.onpopstate = e => {
-      console.log(e);
       this.setState({ showFile: e.state as IFile });
     };
   }
@@ -83,13 +82,11 @@ class Home extends Component<IHomeProps, IHomeState> {
     let lastSlash = file.path.lastIndexOf("/");
     let path = file.path.slice(lastSlash, file.path.length);
     window.history.pushState(file, "", window.location.href + path);
-    console.log(this.state.showFile);
   };
   reInitDirectory = async (response: any) => {
     if (response.success) {
       const path = window.location.pathname;
       const fileObject: any = await PathService.getFiles(path);
-      console.log(fileObject);
       if (fileObject.success) {
         this.setState({ files: fileObject.directoryTree as IFile });
         this.setState({ selectedFile: this.state.files });
@@ -120,7 +117,6 @@ class Home extends Component<IHomeProps, IHomeState> {
     this.setState({ isLoading: true });
     let lastSlash = this.state.showFile.path.lastIndexOf("/");
     let path = this.state.showFile.path.slice(0, lastSlash);
-    console.log(path);
     const res: any = await PathService.getFiles(path);
     if (res.directoryTree != null) {
       this.setState({ showFile: res.directoryTree as IFile, isLoading: false });
@@ -141,12 +137,19 @@ class Home extends Component<IHomeProps, IHomeState> {
             backButtonClicked={this.backButtonClicked}
             backButton={this.state.backButton}
           />
+          <SecondNavigation path={this.state.showFile.path} />
         </header>
         <main className={classes.spacing}>
           {!this.state.isLoading ? (
             <div>
-              <Typography variant="h2">Folders</Typography>
-              <Grid container spacing={24}>
+              <Typography variant="h3">Folders</Typography>
+              <Grid
+                container
+                spacing={3}
+                classes={{
+                  "spacing-xs-3": classes.spacingxs
+                }}
+              >
                 {this.state.showFile.children!.map((val, index) => {
                   return val.type != undefined ? (
                     <Grid key={`${index} Grid`} item xs={2}>
@@ -160,7 +163,7 @@ class Home extends Component<IHomeProps, IHomeState> {
                         handleClick={this.handleClick}
                         backgroundColor={
                           val.name === this.state.selectedFile.name
-                            ? "aliceblue"
+                            ? "#039BE5"
                             : "transparent"
                         }
                         file={val}
@@ -169,10 +172,16 @@ class Home extends Component<IHomeProps, IHomeState> {
                   ) : null;
                 })}
               </Grid>
-              <Typography variant="h2" style={{ marginTop: "2em" }}>
+              <Typography variant="h3" style={{ marginTop: "2em" }}>
                 Files
               </Typography>
-              <Grid container spacing={24}>
+              <Grid
+                container
+                spacing={3}
+                classes={{
+                  "spacing-xs-3": classes.spacingxs
+                }}
+              >
                 {this.state.showFile.children!.map((val, index) => {
                   return val.type != "directory" ? (
                     <Grid key={`${index} Grid`} item xs={2}>
@@ -186,7 +195,7 @@ class Home extends Component<IHomeProps, IHomeState> {
                         handleClick={this.handleClick}
                         backgroundColor={
                           val.name === this.state.selectedFile.name
-                            ? "aliceblue"
+                            ? "#039BE5"
                             : "transparent"
                         }
                         file={val}

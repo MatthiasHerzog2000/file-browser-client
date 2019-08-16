@@ -9,18 +9,20 @@ export const styles = (theme: Theme) =>
       whiteSpace: "nowrap"
     },
     allignment: {
-      textAlign: "center"
+      textAlign: "center",
+      lineHeight: "2"
     },
     icon: {
       margin: "auto",
-      display: "flex"
+      display: "flex",
+      paddingBottom: theme.spacing(1)
     },
     border: {
       border: "2px solid lightGrey",
       cursor: "pointer"
     },
     padding: {
-      padding: theme.spacing.unit
+      paddingBottom: theme.spacing(1)
     }
   });
 export interface IFileComponentProps extends WithStyles<typeof styles> {

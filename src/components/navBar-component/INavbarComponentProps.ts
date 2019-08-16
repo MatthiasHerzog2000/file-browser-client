@@ -11,6 +11,9 @@ export const styles = createStyles({
   menuButton: {
     marginLeft: -12,
     marginRight: 20
+  },
+  space: {
+    marginLeft: "0.5rem"
   }
 });
 

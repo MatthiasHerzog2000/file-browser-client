@@ -10,13 +10,11 @@ export class LoginService {
         username: username,
         password: password
       };
-      console.log(body);
       axios
         .post(SERVER_URL, body, {
           headers: { "Content-type": "application/json" }
         })
         .then(data => {
-          console.log(data);
           resolve(data.data);
         })
         .catch(err => resolve(err.response.data));

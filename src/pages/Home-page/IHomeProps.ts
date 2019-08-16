@@ -11,8 +11,11 @@ export const styles = (theme: Theme) =>
       marginBottom: "11em",
       overflow: "hidden"
     },
+    spacingxs: {
+      margin: 0
+    },
     progress: {
-      margin: theme.spacing.unit * 2
+      margin: theme.spacing(1) * 2
     }
   });
 export interface IHomeProps

@@ -59,7 +59,6 @@ class FileComponent extends Component<
         options
       );
       if (response.success) {
-        console.log(response);
         const base = await PathService.getPreview(response.outpath);
         this.setState({ base64: "data:;base64," + base });
       } else {
@@ -80,8 +79,10 @@ class FileComponent extends Component<
   getImage = () => {
     return (
       <img
+        className={this.props.classes.padding}
         style={{ margin: "auto", display: "block" }}
         src={this.state.base64}
+        alt={this.props.file.name}
       />
     );
   };
@@ -106,7 +107,6 @@ class FileComponent extends Component<
       this.props.file.type,
       this.DownloadProgress
     );
-    console.log(success);
     this.props.downloadFinished(this.props.file.name);
   };
   editClick = () => {
@@ -311,7 +311,6 @@ class FileComponent extends Component<
       <div
         onDoubleClick={this.handleDoubleClick}
         onClick={this.handleClick}
-        style={{ backgroundColor: this.props.backgroundColor }}
         className={classes.border}
       >
         <Grid container justify="space-between">
@@ -325,7 +324,7 @@ class FileComponent extends Component<
             <DeleteIcon />
           </IconButton>
         </Grid>
-        <div className={classes.padding}>
+        <div>
           {this.state.base64 != undefined
             ? this.getImage()
             : this.getFileIcon()}
@@ -344,6 +343,7 @@ class FileComponent extends Component<
               </form>
             ) : (
               <Typography
+                style={{ backgroundColor: this.props.backgroundColor }}
                 variant="h6"
                 className={`${classes.txtOverflow} ${classes.allignment}`}
               >

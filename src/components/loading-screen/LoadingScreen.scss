@@ -1,0 +1,81 @@
+.pulse {
+  animation: pulse 3s infinite;
+  margin: 0 auto;
+  display: table;
+  margin-top: 50px;
+  animation-direction: alternate;
+  -webkit-animation-name: pulse;
+  animation-name: pulse;
+}
+
+.bar1 {
+  animation-delay: 0.1s !important;
+}
+.bar2 {
+  animation-delay: 0.2s !important;
+}
+.bar3 {
+  animation-delay: 0.3s !important;
+}
+.bar4 {
+  animation-delay: 0.4s !important;
+}
+.bar5 {
+  animation-delay: 0.5s !important;
+}
+.bar6 {
+  animation-delay: 0.6s !important;
+}
+.bar7 {
+  animation-delay: 0.7s !important;
+}
+.bar8 {
+  animation-delay: 0.8s !important;
+}
+@keyframes loading {
+  0% {
+    transform: scaleY(0.1);
+    background: #fff;
+  }
+  50% {
+    transform: scaleY(1);
+    background: #72add4;
+  }
+  100% {
+    transform: scaleY(0.1);
+    background: transparent;
+  }
+}
+
+.bar {
+  width: 6px;
+  height: 60px;
+  background: white;
+  display: inline-block;
+  transform-origin: bottom center;
+  animation: loading 1.5s ease-in-out infinite;
+}
+
+@-webkit-keyframes pulse {
+  0% {
+    -webkit-transform: scale(1);
+  }
+  50% {
+    -webkit-transform: scale(1.1);
+  }
+  100% {
+    -webkit-transform: scale(1);
+  }
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
