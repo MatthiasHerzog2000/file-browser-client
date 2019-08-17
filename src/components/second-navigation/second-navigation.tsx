@@ -18,12 +18,14 @@ class SecondNavigation extends Component<
   constructor(props: ISecondNavigationProps) {
     super(props);
     this.state = {
-      pathArray: this.props.path.split("/")
+      pathArray: []
     };
   }
   handleClick = () => {};
   static getDerivedStateFromProps(props: ISecondNavigationProps) {
-    return { pathArray: props.path.split("/") };
+    var helper =
+      "Start" + props.path.split(localStorage.getItem("initPath")!)[1];
+    return { pathArray: helper.split("/") };
   }
   render() {
     const { classes } = this.props;

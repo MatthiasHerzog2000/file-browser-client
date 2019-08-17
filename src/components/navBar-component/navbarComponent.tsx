@@ -96,7 +96,7 @@ class NavbarComponent extends Component<
                 aria-haspopup="true"
                 onClick={this.handleClick}
               >
-                {this.state.user.username}
+                {this.state.user.name}
               </Button>
               <Menu
                 id="simple-menu"

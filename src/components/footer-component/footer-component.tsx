@@ -244,32 +244,44 @@ class FooterComponent extends Component<
               )}
             </Grid>
             <Grid xs={7} item>
-              <Typography variant="h6" align="center">
-                {new Intl.DateTimeFormat("de-DE", {
-                  year: "numeric",
-                  month: "long",
-                  day: "2-digit"
-                }).format(new Date(this.props.selectedFile.atime))}{" "}
-                <Tooltip title="Letzer Zugriff">
-                  <IconButton aria-label="Letzter Zugriff">
-                    <InfoIcon />
-                  </IconButton>
-                </Tooltip>
-              </Typography>
+              {!!this.props.selectedFile.atime ? (
+                <Typography variant="h6" align="center">
+                  {new Intl.DateTimeFormat("de-DE", {
+                    year: "numeric",
+                    month: "long",
+                    day: "2-digit"
+                  }).format(new Date(this.props.selectedFile.atime))}{" "}
+                  <Tooltip title="Letzer Zugriff">
+                    <IconButton aria-label="Letzter Zugriff">
+                      <InfoIcon />
+                    </IconButton>
+                  </Tooltip>
+                </Typography>
+              ) : (
+                <Typography variant="h6" align="center">
+                  Root
+                </Typography>
+              )}
             </Grid>
             <Grid xs={5} item>
-              <Typography variant="h6" align="center">
-                {new Intl.DateTimeFormat("de-DE", {
-                  year: "numeric",
-                  month: "long",
-                  day: "2-digit"
-                }).format(new Date(this.props.selectedFile.mtime))}{" "}
-                <Tooltip title="Erstelldatum">
-                  <IconButton aria-label="Erstelldatum">
-                    <InfoIcon />
-                  </IconButton>
-                </Tooltip>
-              </Typography>
+              {!!this.props.selectedFile.mtime ? (
+                <Typography variant="h6" align="center">
+                  {new Intl.DateTimeFormat("de-DE", {
+                    year: "numeric",
+                    month: "long",
+                    day: "2-digit"
+                  }).format(new Date(this.props.selectedFile.mtime))}{" "}
+                  <Tooltip title="Erstelldatum">
+                    <IconButton aria-label="Erstelldatum">
+                      <InfoIcon />
+                    </IconButton>
+                  </Tooltip>
+                </Typography>
+              ) : (
+                <Typography variant="h6" align="center">
+                  Root
+                </Typography>
+              )}
             </Grid>
           </Grid>
         </div>
