@@ -15,5 +15,6 @@ export const styles = (theme: Theme) =>
     }
   });
 export interface ISecondNavigationProps extends WithStyles<typeof styles> {
-  path: string;
+  path: string[];
+  onSecondNavClicked(path: string, pathArray: string[]): void;
 }

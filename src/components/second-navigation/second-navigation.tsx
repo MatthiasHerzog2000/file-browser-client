@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { ISecondNavigationProps, styles } from "./ISecondNavigationProps";
 import { ISecondNavigationState } from "./ISecondNavigationState";
+import { Link as RouterLink } from "react-router-dom";
 import {
   withStyles,
   Paper,
@@ -9,7 +10,6 @@ import {
   Breadcrumbs
 } from "@material-ui/core";
 import NavigateNextIcon from "@material-ui/icons/NavigateNext";
-import classes from "*.module.css";
 
 class SecondNavigation extends Component<
   ISecondNavigationProps,
@@ -22,11 +22,6 @@ class SecondNavigation extends Component<
     };
   }
   handleClick = () => {};
-  static getDerivedStateFromProps(props: ISecondNavigationProps) {
-    var helper =
-      "Start" + props.path.split(localStorage.getItem("initPath")!)[1];
-    return { pathArray: helper.split("/") };
-  }
   render() {
     const { classes } = this.props;
     return (
@@ -39,12 +34,11 @@ class SecondNavigation extends Component<
               root: classes.body1
             }}
           >
-            {this.state.pathArray.map((val, ind, arr) => {
+            {this.props.path.map((val, ind, arr) => {
               return (
                 <Link
                   color="inherit"
-                  href="/"
-                  onClick={this.handleClick}
+                  onClick={() => this.props.onSecondNavClicked(val, arr)}
                   key={ind}
                 >
                   {val}

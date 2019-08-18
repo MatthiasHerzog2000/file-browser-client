@@ -39,7 +39,11 @@ class Home extends Component<IHomeProps, IHomeState> {
     if (path !== localStorage.getItem("initPath")) {
       this.setState({ backButton: true });
     }
-    const x = await this.reInitDirectory({ success: true, err: "" });
+    const x = await this.reInitDirectory({
+      success: true,
+      err: "",
+      path: path
+    });
     if (this.state.showFile.path)
       window.history.pushState(
         this.state.showFile,
@@ -55,6 +59,29 @@ class Home extends Component<IHomeProps, IHomeState> {
       downloads: [...this.state.downloads, { key, state, progress }],
       downloadOpen: true
     });
+  };
+  onSecondNavClicked = async (pathName: string, pathArray: string[]) => {
+    const pathIndex = pathArray.findIndex(p => p === pathName);
+    const path =
+      pathName === "Start"
+        ? localStorage.getItem("initPath")
+        : localStorage.getItem("initPath") +
+          "/" +
+          pathArray.splice(1, pathIndex).join("/");
+    if (path !== localStorage.getItem("initPath")) {
+      this.setState({ backButton: true });
+    }
+    const x = await this.reInitDirectory({
+      success: true,
+      err: "",
+      path: path
+    });
+    if (this.state.showFile.path)
+      window.history.pushState(
+        this.state.showFile,
+        "",
+        this.state.showFile.path
+      );
   };
   onDownloadProgress = (key: string, progress: number, state: string) => {
     const copyArray = this.state.downloads;
@@ -85,7 +112,7 @@ class Home extends Component<IHomeProps, IHomeState> {
   };
   reInitDirectory = async (response: any) => {
     if (response.success) {
-      const path = window.location.pathname;
+      const path = response.path;
       const fileObject: any = await PathService.getFiles(path);
       if (fileObject.success) {
         this.setState({ files: fileObject.directoryTree as IFile });
@@ -110,7 +137,11 @@ class Home extends Component<IHomeProps, IHomeState> {
       path
     );
     if (response.success) {
-      this.reInitDirectory(response);
+      this.reInitDirectory({
+        success: response.success,
+        err: response.err,
+        path: path
+      });
     }
   };
   backButtonClicked = async () => {
@@ -137,7 +168,12 @@ class Home extends Component<IHomeProps, IHomeState> {
             backButtonClicked={this.backButtonClicked}
             backButton={this.state.backButton}
           />
-          <SecondNavigation path={this.state.showFile.path} />
+          <SecondNavigation
+            path={this.state.showFile.path
+              .replace(localStorage.getItem("initPath")!, "Start")
+              .split("/")}
+            onSecondNavClicked={this.onSecondNavClicked}
+          />
         </header>
         <main className={classes.spacing}>
           {!this.state.isLoading ? (

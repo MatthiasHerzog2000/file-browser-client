@@ -49,7 +49,11 @@ class NavbarComponent extends Component<
       name
     );
     this.setState({ openFolderDialog: false });
-    this.props.newFolderAdded(response);
+    this.props.newFolderAdded({
+      success: response.success,
+      err: response.err,
+      path: this.props.selectedPath
+    });
   };
   closeNewFolderDialog = () => {
     this.setState({ openFolderDialog: false });
