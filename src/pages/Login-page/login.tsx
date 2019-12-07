@@ -24,6 +24,7 @@ import SnackbarComponent from "../../components/snackBar-component/snackbarCompo
 import { AuthService } from "../../utils/auth-service";
 import { PathService } from "../../utils/path-service";
 import LoadingScreen from "../../components/loading-screen/loading-screen";
+import { LOGIN_USERNAME, LOGIN_PASSWORD, LOGIN_HEADER_BUTTON } from "../../static/static-strings";
 const styles = (theme: Theme) =>
   createStyles({
     main: {
@@ -113,11 +114,11 @@ class Login extends React.Component<ILoginProps, ILoginState> {
               <LockOutlinedIcon />
             </Avatar>
             <Typography component="h1" variant="h5">
-              Sign in
+              {LOGIN_HEADER_BUTTON}
             </Typography>
             <form onSubmit={e => this.submit(e)} className={classes.form}>
               <FormControl margin="normal" required fullWidth>
-                <InputLabel htmlFor="username">Username</InputLabel>
+                <InputLabel htmlFor="username">{LOGIN_USERNAME}</InputLabel>
                 <Input
                   id="username"
                   name="username"
@@ -129,7 +130,7 @@ class Login extends React.Component<ILoginProps, ILoginState> {
                 />
               </FormControl>
               <FormControl margin="normal" required fullWidth>
-                <InputLabel htmlFor="password">Password</InputLabel>
+    <InputLabel htmlFor="password">{LOGIN_PASSWORD}</InputLabel>
                 <Input
                   name="password"
                   onChange={e =>
@@ -147,7 +148,7 @@ class Login extends React.Component<ILoginProps, ILoginState> {
                 color="primary"
                 className={classes.submit}
               >
-                Sign in
+                {LOGIN_HEADER_BUTTON}
               </Button>
             </form>
           </Paper>

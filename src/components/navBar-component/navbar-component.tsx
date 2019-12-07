@@ -10,7 +10,6 @@ import {
   Button,
   Menu,
   MenuItem,
-  Divider
 } from "@material-ui/core";
 import ArrowBackIcon from "@material-ui/icons/ArrowBack";
 import { AuthService } from "../../utils/auth-service";
@@ -20,6 +19,7 @@ import CreateNewFolderIcon from "@material-ui/icons/CreateNewFolder";
 import NewFolderDialog from "../new-folder-dialog/newFolderDialog";
 import { PathService } from "../../utils/path-service";
 import { withRouter } from "react-router";
+import { APPBAR_HEADER, NEW_FOLDER, UPLOAD, LOG_OUT } from "../../static/static-strings";
 
 class NavbarComponent extends Component<
   INavbarComponentProps,
@@ -33,7 +33,7 @@ class NavbarComponent extends Component<
       openFolderDialog: false
     };
   }
-  handleClick = (event: SyntheticEvent) => {
+  handleClick = (event: React.MouseEvent<HTMLElement>) => {
     this.setState({ anchorEl: event.currentTarget });
   };
 
@@ -63,7 +63,7 @@ class NavbarComponent extends Component<
     const { anchorEl } = this.state;
     return (
       <div className={classes.root}>
-        <AppBar position="static">
+        <AppBar position="static" className={classes.appBar}>
           <Toolbar>
             {this.props.backButton ? (
               <IconButton
@@ -79,7 +79,7 @@ class NavbarComponent extends Component<
             )}
 
             <Typography variant="h5" color="inherit" className={classes.grow}>
-              File-Browser
+              {APPBAR_HEADER}
             </Typography>
 
             <div>
@@ -87,11 +87,11 @@ class NavbarComponent extends Component<
                 color="inherit"
                 onClick={() => this.setState({ openFolderDialog: true })}
               >
-                Neuer Ordner
+                {NEW_FOLDER}
                 <CreateNewFolderIcon className={classes.space} />
               </Button>
               <Button color="inherit">
-                Upload
+                {UPLOAD}
                 <CloudUploadIcon className={classes.space} />
               </Button>
               <Button
@@ -106,9 +106,12 @@ class NavbarComponent extends Component<
                 id="simple-menu"
                 anchorEl={anchorEl}
                 open={Boolean(anchorEl)}
-                onClose={this.handleClose}
+                anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+                keepMounted
+      transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+                onClose={() => this.setState({anchorEl: null})}
               >
-                <MenuItem onClick={this.handleClose}>Logout</MenuItem>
+  <MenuItem onClick={this.handleClose}>{LOG_OUT}</MenuItem>
               </Menu>
             </div>
           </Toolbar>

@@ -1,6 +1,7 @@
 import { WithStyles, createStyles } from "@material-ui/core";
 import { RouteComponentProps } from "react-router";
 
+const drawerWidth = 280;
 export const styles = createStyles({
   root: {
     flexGrow: 1
@@ -14,7 +15,11 @@ export const styles = createStyles({
   },
   space: {
     marginLeft: "0.5rem"
-  }
+  },
+  appBar: {
+    width: `calc(100% - ${drawerWidth}px)`,
+    marginRight: drawerWidth,
+  },
 });
 
 export interface INavbarComponentProps

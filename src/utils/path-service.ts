@@ -68,7 +68,7 @@ export class PathService {
     return new Promise((resolve, reject) => {
       Axios.post(
         MICROSERVICE_DOWNLOAD_FILE_URL + "downloadFile",
-        { path: path, name: name, type: type },
+        { path: path, name: name, type: type, endType: 'desktop' },
         {
           headers: { "Content-type": "application/json" },
           responseType: "blob",

@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import NavbarComponent from "../../components/navBar-component/navbarComponent";
+import NavbarComponent from "../../components/navBar-component/navbar-component";
 import { IHomeState } from "./IHomeState";
 import { PathService } from "../../utils/path-service";
 import DownloadSnackbar from "../../components/download-snackbar/download-snackbar";
@@ -14,12 +14,14 @@ import SecondNavigation from "../../components/second-navigation/second-navigati
 import SnackbarComponent from "../../components/snackBar-component/snackbarComponent";
 import { IFile } from "../../models/file";
 import { styles, IHomeProps } from "./IHomeProps";
-import FooterComponent from "../../components/footer-component/footer-component";
 import { withRouter } from "react-router";
+import SidebarComponent from "../../components/sidebar-component/sidebar-component";
+import { FOLDER_HEADER, FILE_HEADER, SECOND_NAV_INITPATH } from "../../static/static-strings";
 
 class Home extends Component<IHomeProps, IHomeState> {
   constructor(props: IHomeProps) {
     super(props);
+    
     this.state = {
       files: { path: "", name: "", atime: "", mtime: "", type: "" },
       open: false,
@@ -34,7 +36,7 @@ class Home extends Component<IHomeProps, IHomeState> {
       handleClose: () => this.handleClose()
     };
   }
-  async componentWillMount() {
+  async componentDidMount() {
     const path = window.location.pathname;
     if (path !== localStorage.getItem("initPath")) {
       this.setState({ backButton: true });
@@ -50,10 +52,10 @@ class Home extends Component<IHomeProps, IHomeState> {
         "",
         this.state.showFile.path
       );
-    window.onpopstate = e => {
+    window.onpopstate = (e: any) => {
       this.setState({ showFile: e.state as IFile });
     };
-  }
+  };
   downloadStarted = (key: string, state: string, progress: number) => {
     this.setState({
       downloads: [...this.state.downloads, { key, state, progress }],
@@ -102,7 +104,7 @@ class Home extends Component<IHomeProps, IHomeState> {
     }
   };
   handleClick = (file: IFile) => {
-    this.setState({ selectedFile: file });
+    this.setState({ selectedFile: file});
   };
   handleDoubleClick = (file: IFile) => {
     this.setState({ showFile: file, backButton: true });
@@ -170,7 +172,7 @@ class Home extends Component<IHomeProps, IHomeState> {
           />
           <SecondNavigation
             path={this.state.showFile.path
-              .replace(localStorage.getItem("initPath")!, "Start")
+              .replace(localStorage.getItem("initPath")!, SECOND_NAV_INITPATH)
               .split("/")}
             onSecondNavClicked={this.onSecondNavClicked}
           />
@@ -178,7 +180,7 @@ class Home extends Component<IHomeProps, IHomeState> {
         <main className={classes.spacing}>
           {!this.state.isLoading ? (
             <div>
-              <Typography variant="h3">Folders</Typography>
+  <Typography variant="h3">{FOLDER_HEADER}</Typography>
               <Grid
                 container
                 spacing={3}
@@ -209,7 +211,7 @@ class Home extends Component<IHomeProps, IHomeState> {
                 })}
               </Grid>
               <Typography variant="h3" style={{ marginTop: "2em" }}>
-                Files
+                {FILE_HEADER}
               </Typography>
               <Grid
                 container
@@ -259,11 +261,7 @@ class Home extends Component<IHomeProps, IHomeState> {
           />
         </main>
 
-        {this.state.selectedFile.name !== "" ? (
-          <FooterComponent selectedFile={this.state.selectedFile} />
-        ) : (
-          <div />
-        )}
+        <SidebarComponent selectedFile={this.state.selectedFile}></SidebarComponent>
       </div>
     );
   }

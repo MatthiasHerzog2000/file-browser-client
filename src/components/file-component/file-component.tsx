@@ -1,22 +1,6 @@
 import React, { Component, SyntheticEvent } from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { IFileComponentProps, styles } from "./IFileComponentProps";
 
-import {
-  faFilePdf,
-  faFolder,
-  faFileImage,
-  faFile,
-  faFileWord,
-  faFileExcel,
-  faFileArchive,
-  faFileCsv,
-  faFileCode,
-  faFilePowerpoint,
-  faFileAudio,
-  faFileVideo
-} from "@fortawesome/free-solid-svg-icons";
-import { faJs, faHtml5, faJava } from "@fortawesome/free-brands-svg-icons";
+import { IFileComponentProps, styles } from "./IFileComponentProps";
 import CloudDownloadIcon from "@material-ui/icons/CloudDownload";
 import DeleteIcon from "@material-ui/icons/Delete";
 import EditIcon from "@material-ui/icons/Edit";
@@ -25,13 +9,16 @@ import {
   withStyles,
   IconButton,
   Grid,
-  TextField
+  TextField,
+  Tooltip
 } from "@material-ui/core";
 import { IFileComponentState } from "./IFileComponentState";
 import { PathService } from "../../utils/path-service";
 import { IFile } from "../../models/file";
 import DetailedFileView from "../detailed-file-view/detailed-file-view";
 import { IPreviewOptions } from "../../models/previewOptions";
+import IconFinder from "../../utils/IconFinder";
+import { DELETE_TOOLTIP, RENAME_TOOLTIP, DOWNLOAD_TOOLTIP } from "../../static/static-strings";
 
 class FileComponent extends Component<
   IFileComponentProps,
@@ -134,177 +121,8 @@ class FileComponent extends Component<
     }
     this.setState({ editClicked: false });
   };
-  getFileIcon = () => {
-    let jsx: any;
-    if (!!this.props.file.extension) {
-      switch (this.props.file.extension) {
-        case ".jpeg":
-        case ".jpg":
-        case ".svg":
-          jsx = (
-            <FontAwesomeIcon
-              color="darkGrey"
-              className={this.props.classes.icon}
-              size="5x"
-              icon={faFileImage}
-            />
-          );
-          break;
-        case ".pdf":
-          jsx = (
-            <FontAwesomeIcon
-              color="red"
-              className={this.props.classes.icon}
-              size="5x"
-              icon={faFilePdf}
-            />
-          );
-          break;
-        case ".docx":
-        case ".doc":
-          jsx = (
-            <FontAwesomeIcon
-              color="blue"
-              className={this.props.classes.icon}
-              size="5x"
-              icon={faFileWord}
-            />
-          );
-          break;
-        case ".xlsx":
-        case ".xls":
-          jsx = (
-            <FontAwesomeIcon
-              color="green"
-              className={this.props.classes.icon}
-              size="5x"
-              icon={faFileExcel}
-            />
-          );
-          break;
-        case ".js":
-          jsx = (
-            <FontAwesomeIcon
-              color="yellow"
-              className={this.props.classes.icon}
-              size="5x"
-              icon={faJs}
-            />
-          );
-          break;
-        case ".html":
-          jsx = (
-            <FontAwesomeIcon
-              color="lightOrange"
-              className={this.props.classes.icon}
-              size="5x"
-              icon={faHtml5}
-            />
-          );
-          break;
-        case ".java":
-          jsx = (
-            <FontAwesomeIcon
-              color="lightGrey"
-              className={this.props.classes.icon}
-              size="5x"
-              icon={faJava}
-            />
-          );
-          break;
-        case ".cs":
-        case ".c":
-        case ".h":
-          jsx = (
-            <FontAwesomeIcon
-              color="violet"
-              className={this.props.classes.icon}
-              size="5x"
-              icon={faFileCode}
-            />
-          );
-          break;
-        case ".csv":
-          jsx = (
-            <FontAwesomeIcon
-              color="green"
-              className={this.props.classes.icon}
-              size="5x"
-              icon={faFileCsv}
-            />
-          );
-          break;
-        case ".pptx":
-        case ".ppt":
-          jsx = (
-            <FontAwesomeIcon
-              color="orange"
-              className={this.props.classes.icon}
-              size="5x"
-              icon={faFilePowerpoint}
-            />
-          );
-          break;
-        case ".zip":
-        case ".targz":
-        case ".rar":
-          jsx = (
-            <FontAwesomeIcon
-              color="black"
-              className={this.props.classes.icon}
-              size="5x"
-              icon={faFileArchive}
-            />
-          );
-          break;
-        case ".mp3":
-        case ".wav":
-        case ".wma":
-          jsx = (
-            <FontAwesomeIcon
-              color="lightGrey"
-              className={this.props.classes.icon}
-              size="5x"
-              icon={faFileAudio}
-            />
-          );
-          break;
-        case ".avi":
-        case ".mp4":
-        case ".wmv":
-        case ".mpg":
-          jsx = (
-            <FontAwesomeIcon
-              color="turquoise"
-              className={this.props.classes.icon}
-              size="5x"
-              icon={faFileVideo}
-            />
-          );
-          break;
-        default:
-          jsx = (
-            <FontAwesomeIcon
-              color="lightGrey"
-              className={this.props.classes.icon}
-              size="5x"
-              icon={faFile}
-            />
-          );
-          break;
-      }
-    } else {
-      return (
-        <FontAwesomeIcon
-          color="lightGrey"
-          className={this.props.classes.icon}
-          size="5x"
-          icon={faFolder}
-        />
-      );
-    }
-    return jsx;
-  };
+  
+  
   render() {
     const { classes } = this.props;
     return (
@@ -314,20 +132,26 @@ class FileComponent extends Component<
         className={classes.border}
       >
         <Grid container justify="space-between">
+          <Tooltip placement='top' title={DOWNLOAD_TOOLTIP}>
           <IconButton onClick={() => this.downloadClick()}>
             <CloudDownloadIcon />
           </IconButton>
+          </Tooltip>
+          <Tooltip placement='top' title={RENAME_TOOLTIP}>
           <IconButton onClick={() => this.editClick()}>
             <EditIcon />
           </IconButton>
+          </Tooltip>
+          <Tooltip placement='top' title={DELETE_TOOLTIP}>
           <IconButton onClick={() => this.downloadClick()}>
             <DeleteIcon />
           </IconButton>
+          </Tooltip>
         </Grid>
         <div>
           {this.state.base64 != undefined
             ? this.getImage()
-            : this.getFileIcon()}
+            : IconFinder.getFileIcon(this.props.file, {margin: 'auto', display: 'flex', padding: '1rem'}, '5x')}
           <div>
             {this.state.editClicked ? (
               <form onSubmit={e => this.onSubmit(e)}>
@@ -343,8 +167,8 @@ class FileComponent extends Component<
               </form>
             ) : (
               <Typography
-                style={{ backgroundColor: this.props.backgroundColor }}
-                variant="h6"
+                style={{ backgroundColor: this.props.backgroundColor, color: this.props.backgroundColor === 'transparent' ? 'black' : 'white' }}
+                variant="body1"
                 className={`${classes.txtOverflow} ${classes.allignment}`}
               >
                 {this.props.file.name}

@@ -1,7 +1,8 @@
 import React, { Component, SyntheticEvent } from 'react'
-import { Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, Button, FormControl, InputLabel, Input } from '@material-ui/core';
+import { Dialog, DialogTitle, DialogContent, DialogActions, Button, FormControl, InputLabel, Input } from '@material-ui/core';
 import { INewFolderDialogProps } from './INewFolderDialogProps';
 import { INewFolderState } from './INewFolderState';
+import { NEW_FOLDER_HEADER, NEW_FOLDER_INPUT_FIELD } from '../../static/static-strings';
 
 class NewFolderDialog extends Component<INewFolderDialogProps, INewFolderState> {
     constructor(props: INewFolderDialogProps) {
@@ -24,11 +25,11 @@ class NewFolderDialog extends Component<INewFolderDialogProps, INewFolderState> 
         aria-describedby="alert-dialog-description"
       >
       <form onSubmit={e => this.onSubmit(e)}>
-        <DialogTitle id="alert-dialog-title">{"Neuen Ordner anlegen"}</DialogTitle>
+        <DialogTitle id="alert-dialog-title">{NEW_FOLDER_HEADER}</DialogTitle>
         <DialogContent>
          
           <FormControl margin="normal" required fullWidth>
-            <InputLabel htmlFor="name">Folder name</InputLabel>
+    <InputLabel htmlFor="name">{NEW_FOLDER_INPUT_FIELD}</InputLabel>
             <Input id="name" name="name" onChange={e => this.setState({name: e.currentTarget.value})} autoComplete="name" autoFocus required/>
           </FormControl>
           

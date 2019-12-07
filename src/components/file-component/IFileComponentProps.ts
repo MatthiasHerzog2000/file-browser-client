@@ -12,11 +12,6 @@ export const styles = (theme: Theme) =>
       textAlign: "center",
       lineHeight: "2"
     },
-    icon: {
-      margin: "auto",
-      display: "flex",
-      paddingBottom: theme.spacing(1)
-    },
     border: {
       border: "2px solid lightGrey",
       cursor: "pointer"
