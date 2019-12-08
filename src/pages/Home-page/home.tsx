@@ -21,14 +21,6 @@ import {
   FILE_HEADER,
   SECOND_NAV_INITPATH
 } from "../../static/static-strings";
-//@ts-ignore
-import {
-  DragDropContext,
-  Draggable,
-  DropResult,
-  ResponderProvided,
-  Droppable
-} from "react-beautiful-dnd";
 
 class Home extends Component<IHomeProps, IHomeState> {
   constructor(props: IHomeProps) {
