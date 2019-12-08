@@ -130,6 +130,7 @@ class FileComponent extends Component<
         onDoubleClick={this.handleDoubleClick}
         onClick={this.handleClick}
         className={classes.border}
+        style={{borderColor: this.props.currentDraggedOverFileId === this.props.file.key ? '#039BE5' : 'lightGrey'}}
       >
         <Grid container justify="space-between">
           <Tooltip placement='top' title={DOWNLOAD_TOOLTIP}>

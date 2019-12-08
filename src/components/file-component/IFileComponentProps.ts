@@ -23,6 +23,7 @@ export const styles = (theme: Theme) =>
 export interface IFileComponentProps extends WithStyles<typeof styles> {
   file: IFile;
   backgroundColor: string;
+  currentDraggedOverFileId: string;
   handleClick(file: IFile): void;
   handleDoubleClick(file: IFile): void;
   onProgress(key: string, progress: number, state: string): void;

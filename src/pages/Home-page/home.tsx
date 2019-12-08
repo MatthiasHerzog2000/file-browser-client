@@ -16,14 +16,27 @@ import { IFile } from "../../models/file";
 import { styles, IHomeProps } from "./IHomeProps";
 import { withRouter } from "react-router";
 import SidebarComponent from "../../components/sidebar-component/sidebar-component";
-import { FOLDER_HEADER, FILE_HEADER, SECOND_NAV_INITPATH } from "../../static/static-strings";
+import {
+  FOLDER_HEADER,
+  FILE_HEADER,
+  SECOND_NAV_INITPATH
+} from "../../static/static-strings";
+//@ts-ignore
+import {
+  DragDropContext,
+  Draggable,
+  DropResult,
+  ResponderProvided,
+  Droppable
+} from "react-beautiful-dnd";
 
 class Home extends Component<IHomeProps, IHomeState> {
   constructor(props: IHomeProps) {
     super(props);
-    
+
     this.state = {
-      files: { path: "", name: "", atime: "", mtime: "", type: "" },
+      draggedOverFileId: "",
+      files: { key: "", path: "", name: "", atime: "", mtime: "", type: "" },
       open: false,
       isLoading: true,
       message: "",
@@ -31,8 +44,15 @@ class Home extends Component<IHomeProps, IHomeState> {
       backButton: false,
       downloads: [],
       downloadOpen: false,
-      selectedFile: { path: "", name: "", atime: "", mtime: "", type: "" },
-      showFile: { path: "", name: "", atime: "", mtime: "", type: "" },
+      selectedFile: {
+        key: "",
+        path: "",
+        name: "",
+        atime: "",
+        mtime: "",
+        type: ""
+      },
+      showFile: { key: "", path: "", name: "", atime: "", mtime: "", type: "" },
       handleClose: () => this.handleClose()
     };
   }
@@ -46,6 +66,7 @@ class Home extends Component<IHomeProps, IHomeState> {
       err: "",
       path: path
     });
+    console.log();
     if (this.state.showFile.path)
       window.history.pushState(
         this.state.showFile,
@@ -55,7 +76,7 @@ class Home extends Component<IHomeProps, IHomeState> {
     window.onpopstate = (e: any) => {
       this.setState({ showFile: e.state as IFile });
     };
-  };
+  }
   downloadStarted = (key: string, state: string, progress: number) => {
     this.setState({
       downloads: [...this.state.downloads, { key, state, progress }],
@@ -97,14 +118,17 @@ class Home extends Component<IHomeProps, IHomeState> {
   };
   finishedDownload = (key: string) => {
     const copyArray = this.state.downloads;
-    copyArray.splice(copyArray.findIndex(val => val.key === key), 1);
+    copyArray.splice(
+      copyArray.findIndex(val => val.key === key),
+      1
+    );
     this.setState({ downloads: copyArray });
     if (this.state.downloads.length === 0) {
       this.setState({ downloadOpen: false });
     }
   };
   handleClick = (file: IFile) => {
-    this.setState({ selectedFile: file});
+    this.setState({ selectedFile: file });
   };
   handleDoubleClick = (file: IFile) => {
     this.setState({ showFile: file, backButton: true });
@@ -146,6 +170,18 @@ class Home extends Component<IHomeProps, IHomeState> {
       });
     }
   };
+  _onDragStart = (ev: React.DragEvent<HTMLDivElement>) => {
+    console.log(ev);
+  };
+  _onDrop = (ev: React.DragEvent<HTMLDivElement>) => {
+    this.setState({ draggedOverFileId: "" });
+  };
+  _onDragOver = (ev: React.DragEvent<HTMLDivElement>) => {
+    ev.preventDefault();
+    if (this.state.draggedOverFileId !== ev.currentTarget.id) {
+      this.setState({ draggedOverFileId: ev.currentTarget.id });
+    }
+  };
   backButtonClicked = async () => {
     this.setState({ isLoading: true });
     let lastSlash = this.state.showFile.path.lastIndexOf("/");
@@ -180,7 +216,8 @@ class Home extends Component<IHomeProps, IHomeState> {
         <main className={classes.spacing}>
           {!this.state.isLoading ? (
             <div>
-  <Typography variant="h3">{FOLDER_HEADER}</Typography>
+              <Typography variant="h3">{FOLDER_HEADER}</Typography>
+
               <Grid
                 container
                 spacing={3}
@@ -191,21 +228,33 @@ class Home extends Component<IHomeProps, IHomeState> {
                 {this.state.showFile.children!.map((val, index) => {
                   return val.type != undefined ? (
                     <Grid key={`${index} Grid`} item xs={2}>
-                      <FileComponent
-                        key={`${val.path} ${index} File`}
-                        changeName={this.changeName}
-                        handleDoubleClick={this.handleDoubleClick}
-                        downloadFinished={this.finishedDownload}
-                        downloadStarted={this.downloadStarted}
-                        onProgress={this.onDownloadProgress}
-                        handleClick={this.handleClick}
-                        backgroundColor={
-                          val.name === this.state.selectedFile.name
-                            ? "#039BE5"
-                            : "transparent"
-                        }
-                        file={val}
-                      />
+                      <div
+                        id={val.key}
+                        key={`${index} dragable`}
+                        onDrop={this._onDrop}
+                        onDragOver={this._onDragOver}
+                        draggable
+                        onDragStart={this._onDragStart}
+                      >
+                        <FileComponent
+                          key={`${val.path} ${index} File`}
+                          currentDraggedOverFileId={
+                            this.state.draggedOverFileId
+                          }
+                          changeName={this.changeName}
+                          handleDoubleClick={this.handleDoubleClick}
+                          downloadFinished={this.finishedDownload}
+                          downloadStarted={this.downloadStarted}
+                          onProgress={this.onDownloadProgress}
+                          handleClick={this.handleClick}
+                          backgroundColor={
+                            val.name === this.state.selectedFile.name
+                              ? "#039BE5"
+                              : "transparent"
+                          }
+                          file={val}
+                        />
+                      </div>
                     </Grid>
                   ) : null;
                 })}
@@ -223,21 +272,31 @@ class Home extends Component<IHomeProps, IHomeState> {
                 {this.state.showFile.children!.map((val, index) => {
                   return val.type != "directory" ? (
                     <Grid key={`${index} Grid`} item xs={2}>
-                      <FileComponent
-                        key={`${val.path} ${index} File`}
-                        changeName={this.changeName}
-                        downloadFinished={this.finishedDownload}
-                        downloadStarted={this.downloadStarted}
-                        onProgress={this.onDownloadProgress}
-                        handleDoubleClick={this.handleDoubleClick}
-                        handleClick={this.handleClick}
-                        backgroundColor={
-                          val.name === this.state.selectedFile.name
-                            ? "#039BE5"
-                            : "transparent"
-                        }
-                        file={val}
-                      />
+                      <div
+                        draggable
+                        onDragStart={this._onDragStart}
+                        id={val.key}
+                        key={`${index} dragable`}
+                      >
+                        <FileComponent
+                          currentDraggedOverFileId={
+                            this.state.draggedOverFileId
+                          }
+                          key={`${val.path} ${index} File`}
+                          changeName={this.changeName}
+                          downloadFinished={this.finishedDownload}
+                          downloadStarted={this.downloadStarted}
+                          onProgress={this.onDownloadProgress}
+                          handleDoubleClick={this.handleDoubleClick}
+                          handleClick={this.handleClick}
+                          backgroundColor={
+                            val.name === this.state.selectedFile.name
+                              ? "#039BE5"
+                              : "transparent"
+                          }
+                          file={val}
+                        />
+                      </div>
                     </Grid>
                   ) : null;
                 })}
@@ -261,7 +320,9 @@ class Home extends Component<IHomeProps, IHomeState> {
           />
         </main>
 
-        <SidebarComponent selectedFile={this.state.selectedFile}></SidebarComponent>
+        <SidebarComponent
+          selectedFile={this.state.selectedFile}
+        ></SidebarComponent>
       </div>
     );
   }

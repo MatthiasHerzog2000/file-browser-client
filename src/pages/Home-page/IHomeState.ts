@@ -11,6 +11,7 @@ export interface IHomeState {
   showFile: IFile;
   backButton: boolean;
   downloadOpen: boolean;
+  draggedOverFileId: string;
   downloads: Array<{ key: string; state: string; progress: number }>;
   handleClose(): void;
 }
