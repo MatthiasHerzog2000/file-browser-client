@@ -7,7 +7,9 @@ import {
   Grid,
   withStyles,
   CircularProgress,
-  Typography
+  Typography,
+  Snackbar,
+  SnackbarContent
 } from "@material-ui/core";
 import FileComponent from "../../components/file-component/file-component";
 import SecondNavigation from "../../components/second-navigation/second-navigation";
@@ -15,7 +17,9 @@ import SnackbarComponent from "../../components/snackBar-component/snackbarCompo
 import { IFile } from "../../models/file";
 import { styles, IHomeProps } from "./IHomeProps";
 import { withRouter } from "react-router";
+import Slide from "@material-ui/core/Slide";
 import SidebarComponent from "../../components/sidebar-component/sidebar-component";
+import { TransitionProps } from "@material-ui/core/transitions/transition";
 import {
   FOLDER_HEADER,
   FILE_HEADER,
@@ -28,6 +32,8 @@ class Home extends Component<IHomeProps, IHomeState> {
 
     this.state = {
       draggedOverFileId: "",
+      internalFileMovement: "",
+      uploadFile: false,
       files: { key: "", path: "", name: "", atime: "", mtime: "", type: "" },
       open: false,
       isLoading: true,
@@ -58,7 +64,6 @@ class Home extends Component<IHomeProps, IHomeState> {
       err: "",
       path: path
     });
-    console.log();
     if (this.state.showFile.path)
       window.history.pushState(
         this.state.showFile,
@@ -163,16 +168,39 @@ class Home extends Component<IHomeProps, IHomeState> {
     }
   };
   _onDragStart = (ev: React.DragEvent<HTMLDivElement>) => {
-    console.log(ev);
+    this.setState({ internalFileMovement: ev.currentTarget.id });
   };
   _onDrop = (ev: React.DragEvent<HTMLDivElement>) => {
-    this.setState({ draggedOverFileId: "" });
+    ev.preventDefault();
+    this.setState({ draggedOverFileId: "", internalFileMovement: "" });
+  };
+  _uploadZone = (ev: React.DragEvent<HTMLDivElement>) => {
+    if (this.state.internalFileMovement === "") {
+      ev.preventDefault();
+      this.setState({ uploadFile: true });
+    }
   };
   _onDragOver = (ev: React.DragEvent<HTMLDivElement>) => {
     ev.preventDefault();
-    if (this.state.draggedOverFileId !== ev.currentTarget.id) {
+    if (
+      this.state.draggedOverFileId !== ev.currentTarget.id &&
+      this.state.internalFileMovement !== ""
+    ) {
       this.setState({ draggedOverFileId: ev.currentTarget.id });
     }
+  };
+  _endDrag = (ev: React.DragEvent<HTMLDivElement>) => {
+    this.setState({ draggedOverFileId: "", internalFileMovement: "" });
+  };
+  _uploadFile = (ev: React.DragEvent<HTMLDivElement>) => {
+    ev.preventDefault();
+    if (this.state.internalFileMovement === "") {
+      this.setState({ uploadFile: false });
+      console.log(ev.dataTransfer.files);
+    }
+  };
+  _slideTransition = (props: TransitionProps) => {
+    return <Slide {...props} direction="up" />;
   };
   backButtonClicked = async () => {
     this.setState({ isLoading: true });
@@ -205,9 +233,46 @@ class Home extends Component<IHomeProps, IHomeState> {
             onSecondNavClicked={this.onSecondNavClicked}
           />
         </header>
-        <main className={classes.spacing}>
+        {this.state.uploadFile ? (
+          <Snackbar
+            open={this.state.uploadFile}
+            TransitionComponent={this._slideTransition}
+            ContentProps={{
+              "aria-describedby": "message-id"
+            }}
+          >
+            <SnackbarContent
+              className={classes.uploadNotification}
+              message={<span id="message-id">Dateien hier ablegen</span>}
+            ></SnackbarContent>
+          </Snackbar>
+        ) : null}
+        <main
+          className={classes.spacing}
+          onDrop={this._uploadFile}
+          onDragLeave={(e: React.DragEvent<HTMLDivElement>) => {
+            e.preventDefault();
+            let rect = e.currentTarget.getBoundingClientRect();
+            if (
+              e.clientY < rect.top ||
+              e.clientY >= rect.bottom ||
+              e.clientX < rect.left ||
+              e.clientX >= rect.right
+            ) {
+              this.setState({ uploadFile: false });
+            }
+          }}
+          onDragOver={e => e.preventDefault()}
+          onDragEnter={this._uploadZone}
+          style={{
+            opacity: this.state.uploadFile ? 0.6 : "unset",
+            border: this.state.uploadFile ? "4px solid #039BE5" : "none"
+          }}
+        >
           {!this.state.isLoading ? (
-            <div>
+            <div
+              style={{ pointerEvents: this.state.uploadFile ? "none" : "auto" }}
+            >
               <Typography variant="h3">{FOLDER_HEADER}</Typography>
 
               <Grid
@@ -219,7 +284,7 @@ class Home extends Component<IHomeProps, IHomeState> {
               >
                 {this.state.showFile.children!.map((val, index) => {
                   return val.type != undefined ? (
-                    <Grid key={`${index} Grid`} item xs={2}>
+                    <Grid key={`${index} Grid`} item lg={2} md={3} xs={4}>
                       <div
                         id={val.key}
                         key={`${index} dragable`}
@@ -227,6 +292,7 @@ class Home extends Component<IHomeProps, IHomeState> {
                         onDragOver={this._onDragOver}
                         draggable
                         onDragStart={this._onDragStart}
+                        onDragEnd={this._endDrag}
                       >
                         <FileComponent
                           key={`${val.path} ${index} File`}
@@ -263,10 +329,11 @@ class Home extends Component<IHomeProps, IHomeState> {
               >
                 {this.state.showFile.children!.map((val, index) => {
                   return val.type != "directory" ? (
-                    <Grid key={`${index} Grid`} item xs={2}>
+                    <Grid key={`${index} Grid`} item lg={2} md={3} xs={4}>
                       <div
                         draggable
                         onDragStart={this._onDragStart}
+                        onDragEnd={this._endDrag}
                         id={val.key}
                         key={`${index} dragable`}
                       >

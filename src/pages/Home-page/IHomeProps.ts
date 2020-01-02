@@ -8,17 +8,19 @@ export const styles = (theme: Theme) =>
     },
     spacing: {
       marginTop: "3rem",
-      marginBottom: "11em",
       overflow: "hidden",
       width: `calc(100% - ${drawerWidth}px)`,
-    marginRight: drawerWidth,
+      marginRight: drawerWidth
     },
     spacingxs: {
       margin: 0,
-      width: '100%'
+      width: "100%"
     },
     progress: {
       margin: theme.spacing(1) * 2
+    },
+    uploadNotification: {
+      backgroundColor: theme.palette.primary.main
     }
   });
 export interface IHomeProps

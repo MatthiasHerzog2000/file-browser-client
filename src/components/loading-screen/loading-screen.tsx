@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import Grid from "@material-ui/core/Grid";
 import { ILoadingScreenProps, styles } from "./ILoadingScreenProps";
 import { withStyles } from "@material-ui/core";
 import "./LoadingScreen.scss";
